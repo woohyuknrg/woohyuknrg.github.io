@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Reveal | Ray&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Reveal和RevealPlugin使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reveal">
+<meta property="og:url" content="http://woohyuknrg.github.io/2014/04/13/reveal/index.html">
+<meta property="og:site_name" content="Ray's blog">
+<meta property="og:description" content="Reveal和RevealPlugin使用">
+<meta property="og:updated_time" content="2014-05-07T09:36:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Reveal">
+<meta name="twitter:description" content="Reveal和RevealPlugin使用">
+  
+    <link rel="alternative" href="/atom.xml" title="Ray&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Ray&#39;s blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">iOSer</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://woohyuknrg.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-reveal" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/04/13/reveal/" class="article-date">
+  <time datetime="2014-04-13T03:19:25.000Z" itemprop="datePublished">2014-04-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ios/">ios</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Reveal
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Reveal早有耳闻，今天装了个reveal插件，可自动编译运行app时启动reveal，但是运行发现其仅能在模拟器环境下使用，于是改了下其代码，使其即可在模拟器也可在真机上运行：</p>
+<ol>
+<li><p>git clone插件源码项目：<a href="https://github.com/shjborage/Reveal-Plugin-for-XCode.git" target="_blank" rel="external">https://github.com/shjborage/Reveal-Plugin-for-XCode.git</a></p>
+</li>
+<li><p>在整个项目内搜索该句：<code>objc_msgSend(consoleView, @selector(insertText:), @&quot;expr (void*)dlopen(\&quot;/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib\&quot;, 0x2);&quot;);</code></p>
+</li>
+<li><p>用这句替换掉上面那句<code>objc_msgSend(consoleView, @selector(insertText:), @&quot;expr (void*)dlopen((const char *)[(NSString*)[(NSBundle*)[NSBundle mainBundle] pathForResource:@\&quot;libReveal\&quot; ofType:@\&quot;dylib\&quot;] UTF8String], 0x2);&quot;);</code></p>
+</li>
+<li><p>重新编译运行RevealPlugin，重启XCode</p>
+</li>
+<li><p>把文件<code>/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib</code>通过<code>Build Phases-&gt;Copy Bundle Resources</code>添加到自己项目中（注意不是通过Link Binary With Libraries）</p>
+</li>
+<li><p>Product-&gt;Inspect with Reveal运行项目即可</p>
+</li>
+</ol>
+<p>参考文档：</p>
+<p><a href="http://blog.ittybittyapps.com/blog/2013/11/07/integrating-reveal-without-modifying-your-xcode-project/" target="_blank" rel="external">Integrating Reveal without modifying your Xcode project</a></p>
+<a id="more"></a>
+<hr>
+<p>Reveal还可以用来查看别人app的UI结构，前提条件需要ios6+版本的越狱设备，然后只需以下几步即可：</p>
+<ol>
+<li><p>在Cydia里搜索安装<strong>OpenSSH</strong>和<strong>Cydia Substrate</strong>（还有个<strong>Terminal</strong>可选安装）</p>
+</li>
+<li><p>创建文件<strong>libReveal.plist</strong>，输入内容<br><code>{ Filter = { Bundles = ( &quot;&lt;App ID&gt;&quot; );};}</code>,App ID改为需要查看的app的bundle identifier(如何获取identifier这个不需要多说了吧)，可以包括多个，例如：</p>
+<pre><code><span class="collection">{
+    Filter = <span class="collection">{
+        Bundles = <span class="list">(
+            <span class="string">"com.taobao.taobao4ipad"</span>,
+            <span class="string">"com.taobao.taobao4iphone"</span>,
+        )</span><span class="comment">;</span>
+    }</span><span class="comment">;</span>
+}</span>
+</code></pre></li>
+<li><p>确认已安装了<strong>Reveal</strong>，且<strong>libReveal.plist</strong>在~/文件夹下，在电脑终端依次输入以下命令，<strong>192.168.0.X</strong>替换为你越狱设备的ip地址，当提示需要输密码时，键入：<code>alpine</code>：</p>
+<pre><code>scp -r /<span class="constant">Applications</span>/<span class="constant">Reveal</span>.app/<span class="constant">Contents</span>/<span class="constant">SharedSupport</span>/iOS-<span class="constant">Libraries</span>/<span class="constant">Reveal</span>.framework root<span class="variable">@192</span>.<span class="number">168.0</span>.<span class="constant">X</span><span class="symbol">:/System/Library/Frameworks</span>
+
+scp /<span class="constant">Applications</span>/<span class="constant">Reveal</span>.app/<span class="constant">Contents</span>/<span class="constant">SharedSupport</span>/iOS-<span class="constant">Libraries</span>/libReveal.dylib root<span class="variable">@192</span>.<span class="number">168.0</span>.<span class="constant">X</span><span class="symbol">:/Library/MobileSubstrate/DynamicLibraries</span>
+
+scp ~<span class="regexp">/libReveal.plist root@192.168.0.X:/</span><span class="constant">Library</span>/<span class="constant">MobileSubstrate</span>/<span class="constant">DynamicLibraries</span>
+</code></pre></li>
+<li><p>重启设备或者之前有安装<strong>Terminal</strong>的话，在越狱设备上打开<strong>Terminal</strong>，键入<code>killall SpringBoard</code></p>
+</li>
+<li><p>越狱设备上启动你要查看的app，Mac上打开Reveal，左上角Connection那里选择对应的app，大功告成</p>
+</li>
+</ol>
+<p>最后再提一下，也可用<strong>SparkInspector</strong>查看UI布局，只是scp的文件不同而已</p>
+<p>参考文档：</p>
+<p><a href="http://petersteinberger.com/blog/2013/how-to-inspect-the-view-hierarchy-of-3rd-party-apps/" target="_blank" rel="external">How to Inspect the View Hierarchy of Third-Party Apps</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://woohyuknrg.github.io/2014/04/13/reveal/" data-id="ciewxdpr4000bkcoinsqqyzmn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reveal/">Reveal</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/11/08/ios-weekly-report-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ios weekly report 1
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/04/07/c-plus-plus/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">c++ basic for ioser</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ios/">ios</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/KIF/">KIF</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Reveal/">Reveal</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/">ios</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/octopress/">octopress</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单元测试/">单元测试</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/KIF/" style="font-size: 10px;">KIF</a> <a href="/tags/Reveal/" style="font-size: 10px;">Reveal</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/octopress/" style="font-size: 10px;">octopress</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/01/10/ioskai-fa-trick/">ios开发trick</a>
+          </li>
+        
+          <li>
+            <a href="/2014/11/08/ios-weekly-report-1/">ios weekly report 1</a>
+          </li>
+        
+          <li>
+            <a href="/2014/04/13/reveal/">Reveal</a>
+          </li>
+        
+          <li>
+            <a href="/2014/04/07/c-plus-plus/">c++ basic for ioser</a>
+          </li>
+        
+          <li>
+            <a href="/2014/02/18/mac-plus-github-plus-octopressda-jian-bo-ke/">mac+github+octopress搭建博客</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Ray<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
