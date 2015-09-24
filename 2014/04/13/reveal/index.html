@@ -73,7 +73,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-04-13T03:19:25.000Z" itemprop="datePublished">2014-04-13</time>
-    更新日期:<time datetime="2014-05-07T09:36:11.000Z" itemprop="dateModified">2014-05-07</time>
+    更新日期:<time datetime="2015-09-24T14:12:09.000Z" itemprop="dateModified">2015-09-24</time>
     
   </p>
 </header>
@@ -89,10 +89,12 @@
 <ol>
 <li><p>git clone插件源码项目：<a href="https://github.com/shjborage/Reveal-Plugin-for-XCode.git" target="_blank" rel="external">https://github.com/shjborage/Reveal-Plugin-for-XCode.git</a></p>
 </li>
-<li><p>在整个项目内搜索该句：<code>objc_msgSend(consoleView, @selector(insertText:), @&quot;expr (void*)dlopen(\&quot;/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib\&quot;, 0x2);&quot;);</code></p>
-</li>
-<li><p>用这句替换掉上面那句<code>objc_msgSend(consoleView, @selector(insertText:), @&quot;expr (void*)dlopen((const char *)[(NSString*)[(NSBundle*)[NSBundle mainBundle] pathForResource:@\&quot;libReveal\&quot; ofType:@\&quot;dylib\&quot;] UTF8String], 0x2);&quot;);</code></p>
-</li>
+<li><p>在整个项目内搜索该句：</p>
+<pre><code>objc_msgSend<span class="list">(<span class="keyword">consoleView</span>, @selector<span class="list">(<span class="keyword">insertText</span>:)</span>, @<span class="string">"expr (void*)dlopen(\"/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib\", 0x2);"</span>)</span><span class="comment">;</span>
+</code></pre></li>
+<li><p>用这句替换掉上面那句</p>
+<pre><code>objc_msgSend<span class="list">(<span class="keyword">consoleView</span>, @selector<span class="list">(<span class="keyword">insertText</span>:)</span>, @<span class="string">"expr (void*)dlopen((const char *)[(NSString*)[(NSBundle*)[NSBundle mainBundle] pathForResource:@\"libReveal\" ofType:@\"dylib\"] UTF8String], 0x2);"</span>)</span><span class="comment">;`</span>
+</code></pre></li>
 <li><p>重新编译运行RevealPlugin，重启XCode</p>
 </li>
 <li><p>把文件<code>/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib</code>通过<code>Build Phases-&gt;Copy Bundle Resources</code>添加到自己项目中（注意不是通过Link Binary With Libraries）</p>
