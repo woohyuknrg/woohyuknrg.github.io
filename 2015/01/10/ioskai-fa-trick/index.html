@@ -9,37 +9,7 @@
     
     <meta name="author" content="Ray">
     
-    <meta name="description" content="译自：http://nshipster.com/new-years-2015/
-##成员函数的秘密swift类和结构体的成员函数总是有以下2种等价调用形式：
-[1, 2, 3, 4].reverse()
-Array.reverse([1, 2, 3, 4])()
-##@()封装C字符串除了封装数字和用在集合上，还可用于char *
-NSString *propertyAttributesString =
-@(property_getAttributes(class_getProperty([NSObject class], &quot;description&quot;)));
-//输出：T@&quot;NSString&quot;,R,C
-##AmIBeingDebugged判断app是否在调试器下运行的函数
-#include &amp;lt;assert.h&amp;gt;
-#include &amp;lt;stdbool.h&amp;gt;
-#include &amp;lt;sys/types.h&amp;gt;
-#include &amp;lt;unistd.h&amp;gt;
-#include &amp;lt;sys/sysctl.h&amp;gt;
-
-static bool AmIBeingDebugged(void) {
-    int mib[4];
-    struct kinfo_proc info;
-    size_t size = sizeof(info);
-
-    info.kp_proc.p_flag = 0;
-
-    mib[0] = CTL_KERN;
-    mib[1] = KERN_PROC;
-    mib[2] = KERN_PROC_PID;
-    mib[3] = getpid();
-
-    sysctl(mib, sizeof(mib) / sizeof(*mib), &amp;amp;info, &amp;amp;size, NULL, 0);
-
-    return (info.kp_proc.p_flag &amp;amp; P_TRACED) != 0;
-}">
+    <meta name="description" itemprop="description" content="ios代码片段">
     
     
     
@@ -71,9 +41,9 @@ static bool AmIBeingDebugged(void) {
 			<nav class="animated">
 				<ul>
 					
-						<li><a href="/">Home</a></li>
+						<li><a href="/">首页</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">存档</a></li>
 					
 					<li>
 					
@@ -103,7 +73,7 @@ static bool AmIBeingDebugged(void) {
     </p>
   <p class="article-time">
     <time datetime="2015-01-10T02:30:17.000Z" itemprop="datePublished">2015-01-10</time>
-    更新日期:<time datetime="2015-01-10T04:19:13.000Z" itemprop="dateModified">2015-01-10</time>
+    更新日期:<time datetime="2015-09-24T13:47:28.000Z" itemprop="dateModified">2015-09-24</time>
     
   </p>
 </header>
@@ -112,18 +82,18 @@ static bool AmIBeingDebugged(void) {
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员函数的秘密"><span class="toc-number">1.</span> <span class="toc-text">成员函数的秘密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#@()封装C字符串"><span class="toc-number">2.</span> <span class="toc-text">@()封装C字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AmIBeingDebugged"><span class="toc-number">3.</span> <span class="toc-text">AmIBeingDebugged</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用延迟变量"><span class="toc-number">4.</span> <span class="toc-text">使用延迟变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取插入到storyboard的容器视图的子控制器"><span class="toc-number">5.</span> <span class="toc-text">获取插入到storyboard的容器视图的子控制器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不编译重运行"><span class="toc-number">6.</span> <span class="toc-text">不编译重运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速获取Playground资源文件"><span class="toc-number">7.</span> <span class="toc-text">快速获取Playground资源文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CocoaPods"><span class="toc-number">8.</span> <span class="toc-text">CocoaPods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阻止dylib_Hooking"><span class="toc-number">9.</span> <span class="toc-text">阻止dylib Hooking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取app运行使用的语言"><span class="toc-number">10.</span> <span class="toc-text">获取app运行使用的语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NSDateFormatter_+dateFormatFromTemplate:options:locale:"><span class="toc-number">11.</span> <span class="toc-text">NSDateFormatter +dateFormatFromTemplate:options:locale:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过lldb获得内部常量"><span class="toc-number">12.</span> <span class="toc-text">通过lldb获得内部常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义弱引用关联对象"><span class="toc-number">13.</span> <span class="toc-text">自定义弱引用关联对象</span></a></li></ol>
 		</div>
 		
 		<p>译自：<a href="http://nshipster.com/new-years-2015/" target="_blank" rel="external">http://nshipster.com/new-years-2015/</a></p>
-<p>##成员函数的秘密<br>swift类和结构体的成员函数总是有以下2种等价调用形式：</p>
+<h2 id="成员函数的秘密">成员函数的秘密</h2><p>swift类和结构体的成员函数总是有以下2种等价调用形式：</p>
 <pre><code>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].reverse()
 Array.reverse([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])()
-</code></pre><p>##@()封装C字符串<br>除了封装数字和用在集合上，还可用于char *</p>
+</code></pre><h2 id="@()封装C字符串">@()封装C字符串</h2><p>除了封装数字和用在集合上，还可用于char *</p>
 <pre><code>NSString *propertyAttributesString =
 @(property<span class="number">_</span>getAttributes(<span class="keyword">class</span><span class="number">_</span>getProperty([NSObject <span class="keyword">class</span>], <span class="string">"description"</span>)));
 <span class="comment">//输出：T@"NSString",R,C</span>
-</code></pre><p>##AmIBeingDebugged<br>判断app是否在调试器下运行的函数</p>
+</code></pre><h2 id="AmIBeingDebugged">AmIBeingDebugged</h2><p>判断app是否在调试器下运行的函数</p>
 <pre><code><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span></span>
 <span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdbool.h&gt;</span></span>
 <span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span>
@@ -147,11 +117,10 @@ Array.reverse([<span class="number">1</span>, <span class="number">2</span>, <sp
     <span class="keyword">return</span> (info.kp_proc.p_flag &amp; P_TRACED) != <span class="number">0</span>;
 }
 </code></pre><a id="more"></a>
-<p>##使用延迟变量<br>尽量避免声明optional变量，但没有初始值怎么办，使用<strong>lazy</strong>关键字，谨记在有实际值前不要调用getter，例如：</p>
+<h2 id="使用延迟变量">使用延迟变量</h2><p>尽量避免声明optional变量，但没有初始值怎么办，使用<strong>lazy</strong>关键字，谨记在有实际值前不要调用getter，例如：</p>
 <pre><code>lazy <span class="tag">var</span> someModelStructure = <span class="function"><span class="title">ExpensiveClass</span><span class="params">()</span></span>
 </code></pre><p>如果在调用getter前调用了setter，则<code>ExpensiveClass()</code>永远不会执行。适用于<code>viewDidLoad</code>里才初始化的IBOutlet视图</p>
-<p>##获取插入到storyboard的容器视图的子控制器</p>
-<pre><code><span class="comment">// 1. A property has the same name as a segue identifier in XIB</span>
+<h2 id="获取插入到storyboard的容器视图的子控制器">获取插入到storyboard的容器视图的子控制器</h2><pre><code><span class="comment">// 1. A property has the same name as a segue identifier in XIB</span>
 <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) ChildViewController1 *childController1;
 <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) ChildViewController2 *childController2;
 
@@ -176,9 +145,9 @@ Array.reverse([<span class="number">1</span>, <span class="number">2</span>, <sp
     <span class="keyword">self</span><span class="variable">.childController1</span><span class="variable">.view</span><span class="variable">.backgroundColor</span> = [<span class="built_in">UIColor</span> redColor];
     <span class="keyword">self</span><span class="variable">.childController2</span><span class="variable">.view</span><span class="variable">.backgroundColor</span> = [<span class="built_in">UIColor</span> blueColor];
 }
-</code></pre><p>##不编译重运行<br>Product &gt; Perform Action &gt; Run without Building </p>
+</code></pre><h2 id="不编译重运行">不编译重运行</h2><p>Product &gt; Perform Action &gt; Run without Building </p>
 <p>快捷键：⌘⌃R</p>
-<p>##快速获取Playground资源文件<br>Playground共享同一数据文件夹：<strong>/HOME/Documents/Shared Playground Data</strong>，以下为获取资源文件路径的方法：</p>
+<h2 id="快速获取Playground资源文件">快速获取Playground资源文件</h2><p>Playground共享同一数据文件夹：<strong>/HOME/Documents/Shared Playground Data</strong>，以下为获取资源文件路径的方法：</p>
 <pre><code><span class="keyword">import</span> XCPlayground
 <span class="func"><span class="keyword">func</span> <span class="title">pathToFileInSharedSubfolder</span><span class="params">(file: String)</span></span> -&gt; <span class="type">String</span> {
     <span class="keyword">return</span> <span class="type">XCPSharedDataDirectoryPath</span> + <span class="string">"/"</span> + <span class="type">NSProcessInfo</span>.processInfo().processName + <span class="string">"/"</span> + file
@@ -187,12 +156,12 @@ Array.reverse([<span class="number">1</span>, <span class="number">2</span>, <sp
 <pre><code><span class="tag">var</span> <span class="rule"><span class="attribute">jsonReadError</span>:<span class="value">NSError?
 let jsonData = NSFileManager.<span class="function">defaultManager</span>().<span class="function">contentsAtPath</span>(<span class="function">pathToFileInSharedSubfolder</span>(<span class="string">"data.json"</span>))!
 let jsonArray = NSJSONSerialization.<span class="function">JSONObjectWithData</span>(jsonData, options: nil, error: &amp;jsonReadError) as [AnyObject]</span></span>
-</code></pre><p>##CocoaPods<br>查看app所使用的所有pods：</p>
+</code></pre><h2 id="CocoaPods">CocoaPods</h2><p>查看app所使用的所有pods：</p>
 <p><code>class-dump -C Pods_ /Applications/Squire.app | grep -o &quot;Pods_\w+&quot;</code></p>
-<p>##阻止dylib Hooking<br>在项目设置<strong>Other Linker Flags</strong>里添加：</p>
+<h2 id="阻止dylib_Hooking">阻止dylib Hooking</h2><p>在项目设置<strong>Other Linker Flags</strong>里添加：</p>
 <p><code>-Wl,-sectcreate,__RESTRICT,__restrict,/dev/null</code></p>
-<p>##获取app运行使用的语言<br><code>[[NSBundle mainBundle] preferredLocalizations]</code></p>
-<p>##NSDateFormatter +dateFormatFromTemplate:options:locale:<br>日期格式化模板例子：</p>
+<h2 id="获取app运行使用的语言">获取app运行使用的语言</h2><p><code>[[NSBundle mainBundle] preferredLocalizations]</code></p>
+<h2 id="NSDateFormatter_+dateFormatFromTemplate:options:locale:">NSDateFormatter +dateFormatFromTemplate:options:locale:</h2><p>日期格式化模板例子：</p>
 <pre><code>NSLocale *usLocale = [[NSLocale alloc] <span class="string">initWithLocaleIdentifier:</span>@<span class="string">"en_US"</span>];
 NSLocale *gbLocale = [[NSLocale alloc] <span class="string">initWithLocaleIdentifier:</span>@<span class="string">"en_GB"</span>];
 
@@ -210,14 +179,13 @@ NSLog(@<span class="string">"Date format for %@: %@"</span>,
 <span class="comment">// Output:</span>
 <span class="comment">// Date format for English (United States): MMMM d, y</span>
 <span class="comment">// Date format for English (United Kingdom): d MMMM y</span>
-</code></pre><p>##通过lldb获得内部常量<br>获得转场动画的持续时间：</p>
+</code></pre><h2 id="通过lldb获得内部常量">通过lldb获得内部常量</h2><p>获得转场动画的持续时间：</p>
 <ol>
 <li>设置断点：<code>(lldb) br set -n &quot;+[UITransitionView defaultDurationForTransition:]&quot;</code></li>
 <li>展示模态视图以触发断点，然后执行：<code>(lldb) finish</code></li>
 <li>从<strong>xmm0</strong>寄存器读取结果：<code>(lldb) register read xmm0 --format float64</code>，输出<code>xmm0 = {0.4 0}</code>，0.4即为持续时间</li>
 </ol>
-<p>##自定义弱引用关联对象</p>
-<pre><code><span class="class"><span class="keyword">@interface</span> <span class="title">WeakObjectContainter</span> : <span class="title">NSObject</span></span>
+<h2 id="自定义弱引用关联对象">自定义弱引用关联对象</h2><pre><code><span class="class"><span class="keyword">@interface</span> <span class="title">WeakObjectContainter</span> : <span class="title">NSObject</span></span>
 <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> object;
 <span class="keyword">@end</span>
 
@@ -278,7 +246,7 @@ NSLog(@<span class="string">"Date format for %@: %@"</span>,
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员函数的秘密"><span class="toc-number">1.</span> <span class="toc-text">成员函数的秘密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#@()封装C字符串"><span class="toc-number">2.</span> <span class="toc-text">@()封装C字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AmIBeingDebugged"><span class="toc-number">3.</span> <span class="toc-text">AmIBeingDebugged</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用延迟变量"><span class="toc-number">4.</span> <span class="toc-text">使用延迟变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取插入到storyboard的容器视图的子控制器"><span class="toc-number">5.</span> <span class="toc-text">获取插入到storyboard的容器视图的子控制器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不编译重运行"><span class="toc-number">6.</span> <span class="toc-text">不编译重运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速获取Playground资源文件"><span class="toc-number">7.</span> <span class="toc-text">快速获取Playground资源文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CocoaPods"><span class="toc-number">8.</span> <span class="toc-text">CocoaPods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阻止dylib_Hooking"><span class="toc-number">9.</span> <span class="toc-text">阻止dylib Hooking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取app运行使用的语言"><span class="toc-number">10.</span> <span class="toc-text">获取app运行使用的语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NSDateFormatter_+dateFormatFromTemplate:options:locale:"><span class="toc-number">11.</span> <span class="toc-text">NSDateFormatter +dateFormatFromTemplate:options:locale:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过lldb获得内部常量"><span class="toc-number">12.</span> <span class="toc-text">通过lldb获得内部常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义弱引用关联对象"><span class="toc-number">13.</span> <span class="toc-text">自定义弱引用关联对象</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -323,9 +291,21 @@ NSLog(@<span class="string">"Date format for %@: %@"</span>,
 </div>
 
 
-  <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">歸檔</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+      <li><a href="http://blog.csdn.net/woohyuknrg" target="_blank" title="csdn blog">woohyuknrg的专栏</a></li>
+      <li><a href="http://blog.163.com/ray_jun" target="_blank" title="163 blog">ray_jun的博客</a></li>
+    </ul>
 </div>
+
 
 </aside>
 </div>
@@ -338,9 +318,16 @@ NSLog(@<span class="string">"Date format for %@: %@"</span>,
 	</div>
 	
 	
+	<section class="info">
+		<p> I&#39;m Ray from Chengdu <br/>
+			now working at TY</p>
+	</section>
+	 
 	<div class="social-font clearfix">
 		
 		
+		
+		<a href="https://github.com/woohyuknrg" target="_blank" title="github"></a>
 		
 		
 		

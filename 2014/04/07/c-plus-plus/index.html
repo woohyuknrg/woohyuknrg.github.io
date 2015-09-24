@@ -41,9 +41,9 @@
 			<nav class="animated">
 				<ul>
 					
-						<li><a href="/">Home</a></li>
+						<li><a href="/">首页</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">存档</a></li>
 					
 					<li>
 					
@@ -73,7 +73,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-04-07T12:22:36.000Z" itemprop="datePublished">2014-04-07</time>
-    更新日期:<time datetime="2014-05-07T09:38:22.000Z" itemprop="dateModified">2014-05-07</time>
+    更新日期:<time datetime="2015-09-24T13:42:17.000Z" itemprop="dateModified">2015-09-24</time>
     
   </p>
 </header>
@@ -82,11 +82,11 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#虚函数"><span class="toc-number">1.</span> <span class="toc-text">虚函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数"><span class="toc-number">2.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#析构函数"><span class="toc-number">3.</span> <span class="toc-text">析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作符重载"><span class="toc-number">4.</span> <span class="toc-text">操作符重载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模板函数"><span class="toc-number">5.</span> <span class="toc-text">模板函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模板类"><span class="toc-number">6.</span> <span class="toc-text">模板类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标准模板库"><span class="toc-number">7.</span> <span class="toc-text">标准模板库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vector"><span class="toc-number">7.1.</span> <span class="toc-text">vector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#list双向链表"><span class="toc-number">7.2.</span> <span class="toc-text">list双向链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他常用容器类"><span class="toc-number">7.3.</span> <span class="toc-text">其他常用容器类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shared_Pointers"><span class="toc-number">8.</span> <span class="toc-text">Shared Pointers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Objective-C++"><span class="toc-number">9.</span> <span class="toc-text">Objective-C++</span></a></li></ol>
 		</div>
 		
 		<p><a href="http://www.raywenderlich.com/62990/introduction-c-ios-developers-part-2" target="_blank" rel="external">原文链接</a></p>
-<p>##虚函数<br>先来看个错误示例：</p>
+<h2 id="虚函数">虚函数</h2><p>先来看个错误示例：</p>
 <pre><code><span class="keyword">class</span> Foo {
       <span class="keyword">public</span>:
     <span class="function"><span class="keyword">int</span> <span class="title">value</span><span class="params">()</span> </span>{ <span class="keyword">return</span> <span class="number">5</span>; }
@@ -111,8 +111,7 @@ Foo *f = (Foo*)b;
     <span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">value</span><span class="params">()</span> </span>{ <span class="keyword">return</span> <span class="number">10</span>; }
 };
 </code></pre><a id="more"></a>
-<p>##构造函数</p>
-<pre><code><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>{
+<h2 id="构造函数">构造函数</h2><pre><code><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>{
       <span class="keyword">private</span>:
         <span class="keyword">int</span> x;
 
@@ -172,8 +171,7 @@ Foo *f = (Foo*)b;
         this-&gt;y = y</span></span>;
     }
 };
-</code></pre><p>##析构函数</p>
-<p>析构函数大多都是虚函数（除非这个类你不需要继承它），会自动调用父类的析构函数，示例如下：</p>
+</code></pre><h2 id="析构函数">析构函数</h2><p>析构函数大多都是虚函数（除非这个类你不需要继承它），会自动调用父类的析构函数，示例如下：</p>
 <pre><code><span class="keyword">class</span> Foo {
   <span class="keyword">public</span>:
     <span class="keyword">virtual</span> ~Foo() {
@@ -194,7 +192,7 @@ Foo *f = (Foo*)b;
 <span class="comment">// Output:</span>
 <span class="comment">// Bar destructor</span>
 <span class="comment">// Foo destructor</span>
-</code></pre><p>##操作符重载<br><a href="http://www.learncpp.com/#Chapter9" target="_blank" rel="external">详见</a></p>
+</code></pre><h2 id="操作符重载">操作符重载</h2><p><a href="http://www.learncpp.com/#Chapter9" target="_blank" rel="external">详见</a></p>
 <pre><code><span class="keyword">class</span> DoubleInt {
   <span class="keyword">private</span>:
     <span class="keyword">int</span> x;
@@ -219,8 +217,7 @@ DoubleInt c = a + b;
 
 <span class="function">DoubleInt <span class="title">a</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;
 DoubleInt b = a + <span class="number">10</span>;<span class="comment">// b = DoubleInt(11, 12);</span>
-</code></pre><p>##模板函数</p>
-<p>模板函数只能在头文件中定义实现，示例如下：</p>
+</code></pre><h2 id="模板函数">模板函数</h2><p>模板函数只能在头文件中定义实现，示例如下：</p>
 <pre><code>template &lt;typename T&gt;
 void swap(T a, T b) {
     T temp = a<span class="comment">;</span>
@@ -237,8 +234,7 @@ swap(fx, fy)<span class="comment">;</span>
 
 Person px(“Matt Galloway”), py(“Ray Wenderlich”)<span class="comment">;</span>
 swap(px, py)<span class="comment">;</span>
-</code></pre><p>##模板类</p>
-<pre><code><span class="title">template</span> &lt;typename <span class="type">T</span>&gt;
+</code></pre><h2 id="模板类">模板类</h2><pre><code><span class="title">template</span> &lt;typename <span class="type">T</span>&gt;
 <span class="class"><span class="keyword">class</span> <span class="type">Triplet</span> {
   private:
     <span class="type">T</span> a, b, c;
@@ -273,9 +269,7 @@ swap(px, py)<span class="comment">;</span>
 
 
 Triplet&lt;<span class="keyword">int</span>, <span class="keyword">float</span>, Person&gt; mixedTriplet(<span class="number">1</span>, <span class="number">3.141</span>, Person(“Matt”));
-</code></pre><p>##标准模板库</p>
-<p>###vector</p>
-<pre><code><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span>
+</code></pre><h2 id="标准模板库">标准模板库</h2><h3 id="vector">vector</h3><pre><code><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span>
 
 <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;
 v.push_back(<span class="number">1</span>);
@@ -285,8 +279,7 @@ v.push_back(<span class="number">4</span>);
 v.push_back(<span class="number">5</span>);
 </code></pre><p><code>int first = v[1];</code></p>
 <p><code>int outOfBounds = v.at(100);</code>此种方式相比上面那句会检查索引值是否超出数组界限，从而抛出异常</p>
-<p>###list双向链表</p>
-<pre><code><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span>
+<h3 id="list双向链表">list双向链表</h3><pre><code><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span>
 
 <span class="built_in">std</span>::<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; l;
 l.push_back(<span class="number">1</span>);
@@ -300,9 +293,8 @@ l.push_back(<span class="number">5</span>);
     <span class="type">int</span> thisInt = *i;
     // <span class="type">Do</span> something <span class="keyword">with</span> thisInt
 }
-</code></pre><p>###其他常用容器类<br>set = NSSet，map = NSDictionary，pair（只存储2个值）</p>
-<p>##Shared Pointers</p>
-<p>c++11新特性。类似于ARC，引用计数。shared pointers是栈对象，所以其会在超出作用域范围或调用<code>reset</code>后引用计数减1</p>
+</code></pre><h3 id="其他常用容器类">其他常用容器类</h3><p>set = NSSet，map = NSDictionary，pair（只存储2个值）</p>
+<h2 id="Shared_Pointers">Shared Pointers</h2><p>c++11新特性。类似于ARC，引用计数。shared pointers是栈对象，所以其会在超出作用域范围或调用<code>reset</code>后引用计数减1</p>
 <pre><code><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; p1(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>)); <span class="comment">///&lt; Use count = 1</span>
 
 <span class="keyword">if</span> (doSomething) {
@@ -322,8 +314,7 @@ p1.reset();
 Person *underlyingPointer = *p1; <span class="comment">///&lt; Grab the underlying pointer</span>
 
 p1-&gt;doADance(); <span class="comment">///&lt; Make Matt dance</span>
-</code></pre><p>##Objective-C++</p>
-<p>以下示例注意c++对象的属性声明是assign，用strong或weak都无效</p>
+</code></pre><h2 id="Objective-C++">Objective-C++</h2><p>以下示例注意c++对象的属性声明是assign，用strong或weak都无效</p>
 <pre><code><span class="comment">// Forward declare so that everything works below</span>
 <span class="annotation">@class</span> ObjcClass;
 <span class="class"><span class="keyword">class</span> <span class="title">CppClass</span></span>;
@@ -401,7 +392,7 @@ objcClass.cppClass = cppClass;
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#虚函数"><span class="toc-number">1.</span> <span class="toc-text">虚函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数"><span class="toc-number">2.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#析构函数"><span class="toc-number">3.</span> <span class="toc-text">析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作符重载"><span class="toc-number">4.</span> <span class="toc-text">操作符重载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模板函数"><span class="toc-number">5.</span> <span class="toc-text">模板函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模板类"><span class="toc-number">6.</span> <span class="toc-text">模板类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标准模板库"><span class="toc-number">7.</span> <span class="toc-text">标准模板库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vector"><span class="toc-number">7.1.</span> <span class="toc-text">vector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#list双向链表"><span class="toc-number">7.2.</span> <span class="toc-text">list双向链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他常用容器类"><span class="toc-number">7.3.</span> <span class="toc-text">其他常用容器类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shared_Pointers"><span class="toc-number">8.</span> <span class="toc-text">Shared Pointers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Objective-C++"><span class="toc-number">9.</span> <span class="toc-text">Objective-C++</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -446,9 +437,21 @@ objcClass.cppClass = cppClass;
 </div>
 
 
-  <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">歸檔</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+      <li><a href="http://blog.csdn.net/woohyuknrg" target="_blank" title="csdn blog">woohyuknrg的专栏</a></li>
+      <li><a href="http://blog.163.com/ray_jun" target="_blank" title="163 blog">ray_jun的博客</a></li>
+    </ul>
 </div>
+
 
 </aside>
 </div>
@@ -461,9 +464,16 @@ objcClass.cppClass = cppClass;
 	</div>
 	
 	
+	<section class="info">
+		<p> I&#39;m Ray from Chengdu <br/>
+			now working at TY</p>
+	</section>
+	 
 	<div class="social-font clearfix">
 		
 		
+		
+		<a href="https://github.com/woohyuknrg" target="_blank" title="github"></a>
 		
 		
 		
