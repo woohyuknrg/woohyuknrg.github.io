@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Reveal | Ray&#39;s blog</title>
+  <title>swift + vapor写服务器 | Ray&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Reveal和RevealPlugin使用">
+  <meta name="description" content="swift + vapor">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reveal">
-<meta property="og:url" content="http://woohyuknrg.github.io/2014/04/13/reveal/index.html">
+<meta property="og:title" content="swift + vapor写服务器">
+<meta property="og:url" content="http://woohyuknrg.github.io/2016/03/23/server-with-swift/index.html">
 <meta property="og:site_name" content="Ray's blog">
-<meta property="og:description" content="Reveal和RevealPlugin使用">
-<meta property="og:updated_time" content="2015-09-26T06:15:14.000Z">
+<meta property="og:description" content="swift + vapor">
+<meta property="og:updated_time" content="2016-03-23T13:49:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Reveal">
-<meta name="twitter:description" content="Reveal和RevealPlugin使用">
+<meta name="twitter:title" content="swift + vapor写服务器">
+<meta name="twitter:description" content="swift + vapor">
   
   
     <link rel="icon" href="favicon.png">
@@ -120,7 +120,7 @@
 </aside>
 
       
-      <section id="main"><article id="post-reveal" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-server-with-swift" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -129,7 +129,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Reveal
+      swift + vapor写服务器
     </h1>
   
 
@@ -137,8 +137,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/04/13/reveal/">
-      <time datetime="2014-04-13T03:19:25.000Z" itemprop="datePublished">2014-04-13</time>
+    <a href="/2016/03/23/server-with-swift/">
+      <time datetime="2016-03-23T12:43:38.000Z" itemprop="datePublished">2016-03-23</time>
     </a>
   </div>
 
@@ -146,7 +146,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/ios/">ios</a>
+    <a class="article-category-link" href="/categories/swift/">swift</a>
   </div>
 
         </div>
@@ -155,66 +155,82 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>Reveal早有耳闻，今天装了个reveal插件，可自动编译运行app时启动reveal，但是运行发现其仅能在模拟器环境下使用，于是改了下其代码，使其即可在模拟器也可在真机上运行：</p>
-<a id="more"></a>
-<ol>
-<li><p>git clone插件源码项目：<a href="https://github.com/shjborage/Reveal-Plugin-for-XCode.git" target="_blank" rel="external">https://github.com/shjborage/Reveal-Plugin-for-XCode.git</a></p>
-</li>
-<li><p>在整个项目内搜索该句：</p>
-<pre><code>objc_msgSend<span class="list">(<span class="keyword">consoleView</span>, @selector<span class="list">(<span class="keyword">insertText</span>:)</span>, @<span class="string">"expr (void*)dlopen(\"/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib\", 0x2);"</span>)</span><span class="comment">;</span>
-</code></pre></li>
-<li><p>用这句替换掉上面那句</p>
-<pre><code>objc_msgSend<span class="list">(<span class="keyword">consoleView</span>, @selector<span class="list">(<span class="keyword">insertText</span>:)</span>, @<span class="string">"expr (void*)dlopen((const char *)[(NSString*)[(NSBundle*)[NSBundle mainBundle] pathForResource:@\"libReveal\" ofType:@\"dylib\"] UTF8String], 0x2);"</span>)</span><span class="comment">;`</span>
-</code></pre></li>
-<li><p>重新编译运行RevealPlugin，重启XCode</p>
-</li>
-<li><p>把文件<code>/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib</code>通过<code>Build Phases-&gt;Copy Bundle Resources</code>添加到自己项目中（注意不是通过Link Binary With Libraries）</p>
-</li>
-<li><p>Product-&gt;Inspect with Reveal运行项目即可</p>
-</li>
-</ol>
-<p>参考文档：</p>
-<p><a href="http://blog.ittybittyapps.com/blog/2013/11/07/integrating-reveal-without-modifying-your-xcode-project/" target="_blank" rel="external">Integrating Reveal without modifying your Xcode project</a></p>
-<hr>
-<p>Reveal还可以用来查看别人app的UI结构，前提条件需要ios6+版本的越狱设备，然后只需以下几步即可：</p>
-<ol>
-<li><p>在Cydia里搜索安装<strong>OpenSSH</strong>和<strong>Cydia Substrate</strong>（还有个<strong>Terminal</strong>可选安装）</p>
-</li>
-<li><p>创建文件<strong>libReveal.plist</strong>，输入内容<br><code>{ Filter = { Bundles = ( &quot;&lt;App ID&gt;&quot; );};}</code>,App ID改为需要查看的app的bundle identifier(如何获取identifier这个不需要多说了吧)，可以包括多个，例如：</p>
-<pre><code><span class="collection">{
-    Filter = <span class="collection">{
-        Bundles = <span class="list">(
-            <span class="string">"com.taobao.taobao4ipad"</span>,
-            <span class="string">"com.taobao.taobao4iphone"</span>,
-        )</span><span class="comment">;</span>
-    }</span><span class="comment">;</span>
-}</span>
-</code></pre></li>
-<li><p>确认已安装了<strong>Reveal</strong>，且<strong>libReveal.plist</strong>在~/文件夹下，在电脑终端依次输入以下命令，<strong>192.168.0.X</strong>替换为你越狱设备的ip地址，当提示需要输密码时，键入：<code>alpine</code>：</p>
-<pre><code>scp -r /<span class="constant">Applications</span>/<span class="constant">Reveal</span>.app/<span class="constant">Contents</span>/<span class="constant">SharedSupport</span>/iOS-<span class="constant">Libraries</span>/<span class="constant">Reveal</span>.framework root<span class="variable">@192</span>.<span class="number">168.0</span>.<span class="constant">X</span><span class="symbol">:/System/Library/Frameworks</span>
+        <p><a href="http://www.cocoachina.com/swift/20160318/15712.html" target="_blank" rel="external">参考文章</a></p>
+<p><a href="https://github.com/loganwright/swift-server-io" target="_blank" rel="external">示例demo</a></p>
+<p><a href="https://github.com/qutheory/vapor" target="_blank" rel="external">vapor</a></p>
+<p>看了参考文章写的用swift写服务器，自己跟着做了一遍，踩了不少坑，于是记录成文：</p>
+<h2 id="下载安装swift开发版的snapshot">下载安装swift开发版的snapshot</h2><p><a href="https://swift.org/download/" target="_blank" rel="external">swift官网</a></p>
+<p>此处有坑，不要下载最新的3.16号的安装包，要下载和vapor使用版本一致的包，可打开vapor里的.swift-version文件查看其使用版本，目前使用的是：<br><a href="https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg" target="_blank" rel="external">https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg</a></p>
+<h2 id="添加环境变量">添加环境变量</h2><p>若使用的是Xcode7.3：<code>export TOOLCHAINS=swift</code></p>
+<p>或者使用Xcode7.2：<code>PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin:$PATH</code></p>
+<p>添加后执行：<code>swift —version</code>，确认显示为：<code>Swift version 3.0-dev</code></p>
+<p>再执行：<code>swift build —version</code>，确认显示为：<code>Apple Swift Package Manager</code></p>
+<p>若出现以下错误（下载DEVELOPMENT-SNAPSHOT-2016-03-16-a的包会出这个问题，我最初下载的3.16的包，遇到这个问题，一并记录在这儿；下载安装3.1的包不会有该问题）：</p>
+<blockquote>
+<p>dyld: Library not loaded: @rpath/libswiftCore.dylib<br>Referenced from: /Library/Developer/Toolchains/swift-DEVELOPMENT-SNAPSHOT-2016-03-16-a.xctoolchain/usr/bin/swift-build<br>Reason: image not found</p>
+</blockquote>
+<p><a href="http://blog.yourtion.com/install-swift-and-solve-library-not-loaded.html" target="_blank" rel="external">解决办法</a>，添加环境变量：<br><code>export DYLD_LIBRARY_PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/lib/swift/macosx:$DYLD_LIBRARY_PATH</code></p>
+<h2 id="Package-swift">Package.swift</h2><p>示例项目里的package url要改为：<code>https://github.com/qutheory/vapor.git</code></p>
+<h2 id="build_settings里设置import_paths">build settings里设置import paths</h2><p>示例项目已设置好，若是自己新建项目，需要自己设置</p>
+<pre><code><span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/debug
+<span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/release
+</code></pre><h2 id="toolchain运行Xcode">toolchain运行Xcode</h2><p><code>xcrun launch-with-toolchain /Library/Developer/Toolchains/swift-latest.xctoolchain</code></p>
+<h2 id="修改main-swift代码">修改main.swift代码</h2><p>示例项目的代码编译出错，看了下vapor的使用示例，我改成了如下代码：</p>
+<pre><code><span class="keyword">import</span> Foundation
+<span class="keyword">import</span> Vapor
 
-scp /<span class="constant">Applications</span>/<span class="constant">Reveal</span>.app/<span class="constant">Contents</span>/<span class="constant">SharedSupport</span>/iOS-<span class="constant">Libraries</span>/libReveal.dylib root<span class="variable">@192</span>.<span class="number">168.0</span>.<span class="constant">X</span><span class="symbol">:/Library/MobileSubstrate/DynamicLibraries</span>
+<span class="keyword">let</span> app = <span class="type">Application</span>()
 
-scp ~<span class="regexp">/libReveal.plist root@192.168.0.X:/</span><span class="constant">Library</span>/<span class="constant">MobileSubstrate</span>/<span class="constant">DynamicLibraries</span>
-</code></pre></li>
-<li><p>重启设备或者之前有安装<strong>Terminal</strong>的话，在越狱设备上打开<strong>Terminal</strong>，键入<code>killall SpringBoard</code></p>
-</li>
-<li><p>越狱设备上启动你要查看的app，Mac上打开Reveal，左上角Connection那里选择对应的app，大功告成</p>
-</li>
-</ol>
-<p>最后再提一下，也可用<strong>SparkInspector</strong>查看UI布局，只是scp的文件不同而已</p>
-<p>参考文档：</p>
-<p><a href="http://petersteinberger.com/blog/2013/how-to-inspect-the-view-hierarchy-of-3rd-party-apps/" target="_blank" rel="external">How to Inspect the View Hierarchy of Third-Party Apps</a></p>
+app.<span class="keyword">get</span>(<span class="string">"hello"</span>) { <span class="number">_</span> <span class="keyword">in</span>
+    <span class="keyword">if</span> <span class="keyword">let</span> json = try? <span class="type">Json</span>([<span class="string">"Hello"</span> : <span class="string">"World"</span>]) {
+        <span class="keyword">return</span> json
+    }
+
+    <span class="keyword">return</span> <span class="string">"hello swift world"</span>
+}
+
+app.<span class="keyword">get</span>(<span class="string">"hello/:name"</span>) { request <span class="keyword">in</span>
+    <span class="keyword">let</span> name = request.parameters[<span class="string">"name"</span>] ?? <span class="string">"World"</span>
+
+    <span class="keyword">if</span> <span class="keyword">let</span> json = try? <span class="type">Json</span>([<span class="string">"Hello"</span> : name]) {
+        <span class="keyword">return</span> json
+    }
+
+    <span class="keyword">return</span> <span class="string">"Hello: <span class="subst">\(name)</span>"</span>
+}
+
+app.start(port: <span class="number">8080</span>)
+</code></pre><p>在示例项目路径下执行如下指令启动服务器：</p>
+<p><code>swift build &amp;&amp; .build/debug/SwiftServerIO</code></p>
+<p>浏览器输入：<a href="http://localhost:8080/hello" target="_blank" rel="external">http://localhost:8080/hello</a>，或<a href="http://localhost:8080/hello/ray" target="_blank" rel="external">http://localhost:8080/hello/ray</a>，可看到显示的服务器返回数据</p>
+<h2 id="上传Heroku">上传Heroku</h2><p>先注册帐号并创建一个app：<a href="https://id.heroku.com/login" target="_blank" rel="external">https://id.heroku.com/login</a></p>
+<p>注：示例项目已经包括了buildpack文件。其内容作用为：告诉Heroku去运行SwiftServerIO可执行文件。没有该文件的话需要自己创建并git提交上传</p>
+<p>还要在项目目录下创建.swift-version文件：<br><code>touch .swift-version</code></p>
+<p>输入内容：<code>DEVELOPMENT-SNAPSHOT-2016-03-01-a</code></p>
+<h3 id="安装Heroku_Toolbelt">安装Heroku Toolbelt</h3><p><a href="https://toolbelt.heroku.com" target="_blank" rel="external">下载地址</a></p>
+<p>安装好以后执行以下命令（heroku git指令执行需翻墙，如果项目已经是git项目，则前两句不用执行）：</p>
+<pre><code><span class="built_in">cd</span> my-project/
+git init
+heroku git:remote <span class="operator">-a</span> <span class="string">'heroku上创建的app名'</span>
+</code></pre><p>提交代码（以后可多次执行）：</p>
+<pre><code>git add .
+git <span class="operator"><span class="keyword">commit</span> -<span class="keyword">m</span> <span class="string">"coding"</span>
+git push heroku <span class="keyword">master</span></span>
+</code></pre><p>执行git push会失败，解决方案：执行该命令：<br><code>heroku buildpacks:set https://github.com/kylef/heroku-buildpack-swift.git</code></p>
+<h3 id="最后一步">最后一步</h3><p>执行指令（只需执行一次，以后即使在其他电脑上都不需要再次执行了）：<br><code>heroku ps:scale web=1</code></p>
+<p>最后浏览器打开：<a href="http://ljswiftserver.herokuapp.com/hello" target="_blank" rel="external">http://ljswiftserver.herokuapp.com/hello</a></p>
+<p>欢呼吧！</p>
+<h2 id="问题">问题</h2><p>没法debug！！！Xcode编译项目会报错，只能通过命令行运行程序。若有大牛知道，忘不吝赐教</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://woohyuknrg.github.io/2014/04/13/reveal/" data-id="cim4wpua2000m7koil3w0k8l4" class="article-share-link">分享到</a>
+      <a data-url="http://woohyuknrg.github.io/2016/03/23/server-with-swift/" data-id="cim4wpu9n00097koi6xv1xqtw" class="article-share-link">分享到</a>
       
-        <a href="http://woohyuknrg.github.io/2014/04/13/reveal/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://woohyuknrg.github.io/2016/03/23/server-with-swift/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reveal/">Reveal</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Heroku/">Heroku</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/swift/">swift</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vapor/">vapor</a></li></ul>
 
     </footer>
   </div>
@@ -222,19 +238,10 @@ scp ~<span class="regexp">/libReveal.plist root@192.168.0.X:/</span><span class=
     
 <nav id="article-nav">
   
-    <a href="/2014/11/08/ios-weekly-report-1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          ios weekly report 1
-        
-      </div>
-    </a>
   
-  
-    <a href="/2014/04/07/c-plus-plus/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/01/10/ioskai-fa-trick/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">c++ basic for ioser</div>
+      <div class="article-nav-title">ios开发trick</div>
     </a>
   
 </nav>
@@ -245,7 +252,7 @@ scp ~<span class="regexp">/libReveal.plist root@192.168.0.X:/</span><span class=
 
 
   <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="http://woohyuknrg.github.io/2014/04/13/reveal/" data-title="Reveal" data-url="http://woohyuknrg.github.io/2014/04/13/reveal/">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://woohyuknrg.github.io/2016/03/23/server-with-swift/" data-title="swift + vapor写服务器" data-url="http://woohyuknrg.github.io/2016/03/23/server-with-swift/">
       <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
       </div>
   </section>
