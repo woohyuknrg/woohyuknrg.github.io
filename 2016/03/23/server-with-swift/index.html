@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://woohyuknrg.github.io/2016/03/23/server-with-swift/index.html">
 <meta property="og:site_name" content="Ray's blog">
 <meta property="og:description" content="swift + vapor">
-<meta property="og:updated_time" content="2016-03-23T13:49:11.000Z">
+<meta property="og:updated_time" content="2016-03-23T13:58:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="swift + vapor写服务器">
 <meta name="twitter:description" content="swift + vapor">
@@ -170,6 +170,7 @@
 <p>dyld: Library not loaded: @rpath/libswiftCore.dylib<br>Referenced from: /Library/Developer/Toolchains/swift-DEVELOPMENT-SNAPSHOT-2016-03-16-a.xctoolchain/usr/bin/swift-build<br>Reason: image not found</p>
 </blockquote>
 <p><a href="http://blog.yourtion.com/install-swift-and-solve-library-not-loaded.html" target="_blank" rel="external">解决办法</a>，添加环境变量：<br><code>export DYLD_LIBRARY_PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/lib/swift/macosx:$DYLD_LIBRARY_PATH</code></p>
+<a id="more"></a>
 <h2 id="Package-swift">Package.swift</h2><p>示例项目里的package url要改为：<code>https://github.com/qutheory/vapor.git</code></p>
 <h2 id="build_settings里设置import_paths">build settings里设置import paths</h2><p>示例项目已设置好，若是自己新建项目，需要自己设置</p>
 <pre><code><span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/debug
@@ -208,8 +209,8 @@ app.start(port: <span class="number">8080</span>)
 <p>还要在项目目录下创建.swift-version文件：<br><code>touch .swift-version</code></p>
 <p>输入内容：<code>DEVELOPMENT-SNAPSHOT-2016-03-01-a</code></p>
 <h3 id="安装Heroku_Toolbelt">安装Heroku Toolbelt</h3><p><a href="https://toolbelt.heroku.com" target="_blank" rel="external">下载地址</a></p>
-<p>安装好以后执行以下命令（heroku git指令执行需翻墙，如果项目已经是git项目，则前两句不用执行）：</p>
-<pre><code><span class="built_in">cd</span> my-project/
+<p>安装好以后执行以下命令（heroku git指令执行需翻墙，如果项目已经是git项目，则git init不用执行）：</p>
+<pre><code><span class="built_in">cd</span> swift-server-io/
 git init
 heroku git:remote <span class="operator">-a</span> <span class="string">'heroku上创建的app名'</span>
 </code></pre><p>提交代码（以后可多次执行）：</p>

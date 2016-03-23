@@ -154,13 +154,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-                
-        <p><a href="http://www.cocoachina.com/swift/20160318/15712.html" target="_blank" rel="external">参考文章</a></p>
-<p><a href="https://github.com/loganwright/swift-server-io" target="_blank" rel="external">示例demo</a></p>
-<p><a href="https://github.com/qutheory/vapor" target="_blank" rel="external">vapor</a></p>
+        <p><a href="http://www.cocoachina.com/swift/20160318/15712.html">参考文章</a></p>
+<p><a href="https://github.com/loganwright/swift-server-io">示例demo</a></p>
+<p><a href="https://github.com/qutheory/vapor">vapor</a></p>
 <p>看了参考文章写的用swift写服务器，自己跟着做了一遍，踩了不少坑，于是记录成文：</p>
-<h2 id="下载安装swift开发版的snapshot">下载安装swift开发版的snapshot</h2><p><a href="https://swift.org/download/" target="_blank" rel="external">swift官网</a></p>
-<p>此处有坑，不要下载最新的3.16号的安装包，要下载和vapor使用版本一致的包，可打开vapor里的.swift-version文件查看其使用版本，目前使用的是：<br><a href="https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg" target="_blank" rel="external">https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg</a></p>
+<h2 id="下载安装swift开发版的snapshot">下载安装swift开发版的snapshot</h2><p><a href="https://swift.org/download/">swift官网</a></p>
+<p>此处有坑，不要下载最新的3.16号的安装包，要下载和vapor使用版本一致的包，可打开vapor里的.swift-version文件查看其使用版本，目前使用的是：<br><a href="https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg">https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg</a></p>
 <h2 id="添加环境变量">添加环境变量</h2><p>若使用的是Xcode7.3：<code>export TOOLCHAINS=swift</code></p>
 <p>或者使用Xcode7.2：<code>PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin:$PATH</code></p>
 <p>添加后执行：<code>swift —version</code>，确认显示为：<code>Swift version 3.0-dev</code></p>
@@ -169,59 +168,12 @@
 <blockquote>
 <p>dyld: Library not loaded: @rpath/libswiftCore.dylib<br>Referenced from: /Library/Developer/Toolchains/swift-DEVELOPMENT-SNAPSHOT-2016-03-16-a.xctoolchain/usr/bin/swift-build<br>Reason: image not found</p>
 </blockquote>
-<p><a href="http://blog.yourtion.com/install-swift-and-solve-library-not-loaded.html" target="_blank" rel="external">解决办法</a>，添加环境变量：<br><code>export DYLD_LIBRARY_PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/lib/swift/macosx:$DYLD_LIBRARY_PATH</code></p>
-<h2 id="Package-swift">Package.swift</h2><p>示例项目里的package url要改为：<code>https://github.com/qutheory/vapor.git</code></p>
-<h2 id="build_settings里设置import_paths">build settings里设置import paths</h2><p>示例项目已设置好，若是自己新建项目，需要自己设置</p>
-<pre><code><span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/debug
-<span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/release
-</code></pre><h2 id="toolchain运行Xcode">toolchain运行Xcode</h2><p><code>xcrun launch-with-toolchain /Library/Developer/Toolchains/swift-latest.xctoolchain</code></p>
-<h2 id="修改main-swift代码">修改main.swift代码</h2><p>示例项目的代码编译出错，看了下vapor的使用示例，我改成了如下代码：</p>
-<pre><code><span class="keyword">import</span> Foundation
-<span class="keyword">import</span> Vapor
-
-<span class="keyword">let</span> app = <span class="type">Application</span>()
-
-app.<span class="keyword">get</span>(<span class="string">"hello"</span>) { <span class="number">_</span> <span class="keyword">in</span>
-    <span class="keyword">if</span> <span class="keyword">let</span> json = try? <span class="type">Json</span>([<span class="string">"Hello"</span> : <span class="string">"World"</span>]) {
-        <span class="keyword">return</span> json
-    }
-
-    <span class="keyword">return</span> <span class="string">"hello swift world"</span>
-}
-
-app.<span class="keyword">get</span>(<span class="string">"hello/:name"</span>) { request <span class="keyword">in</span>
-    <span class="keyword">let</span> name = request.parameters[<span class="string">"name"</span>] ?? <span class="string">"World"</span>
-
-    <span class="keyword">if</span> <span class="keyword">let</span> json = try? <span class="type">Json</span>([<span class="string">"Hello"</span> : name]) {
-        <span class="keyword">return</span> json
-    }
-
-    <span class="keyword">return</span> <span class="string">"Hello: <span class="subst">\(name)</span>"</span>
-}
-
-app.start(port: <span class="number">8080</span>)
-</code></pre><p>在示例项目路径下执行如下指令启动服务器：</p>
-<p><code>swift build &amp;&amp; .build/debug/SwiftServerIO</code></p>
-<p>浏览器输入：<a href="http://localhost:8080/hello" target="_blank" rel="external">http://localhost:8080/hello</a>，或<a href="http://localhost:8080/hello/ray" target="_blank" rel="external">http://localhost:8080/hello/ray</a>，可看到显示的服务器返回数据</p>
-<h2 id="上传Heroku">上传Heroku</h2><p>先注册帐号并创建一个app：<a href="https://id.heroku.com/login" target="_blank" rel="external">https://id.heroku.com/login</a></p>
-<p>注：示例项目已经包括了buildpack文件。其内容作用为：告诉Heroku去运行SwiftServerIO可执行文件。没有该文件的话需要自己创建并git提交上传</p>
-<p>还要在项目目录下创建.swift-version文件：<br><code>touch .swift-version</code></p>
-<p>输入内容：<code>DEVELOPMENT-SNAPSHOT-2016-03-01-a</code></p>
-<h3 id="安装Heroku_Toolbelt">安装Heroku Toolbelt</h3><p><a href="https://toolbelt.heroku.com" target="_blank" rel="external">下载地址</a></p>
-<p>安装好以后执行以下命令（heroku git指令执行需翻墙，如果项目已经是git项目，则前两句不用执行）：</p>
-<pre><code><span class="built_in">cd</span> my-project/
-git init
-heroku git:remote <span class="operator">-a</span> <span class="string">'heroku上创建的app名'</span>
-</code></pre><p>提交代码（以后可多次执行）：</p>
-<pre><code>git add .
-git <span class="operator"><span class="keyword">commit</span> -<span class="keyword">m</span> <span class="string">"coding"</span>
-git push heroku <span class="keyword">master</span></span>
-</code></pre><p>执行git push会失败，解决方案：执行该命令：<br><code>heroku buildpacks:set https://github.com/kylef/heroku-buildpack-swift.git</code></p>
-<h3 id="最后一步">最后一步</h3><p>执行指令（只需执行一次，以后即使在其他电脑上都不需要再次执行了）：<br><code>heroku ps:scale web=1</code></p>
-<p>最后浏览器打开：<a href="http://ljswiftserver.herokuapp.com/hello" target="_blank" rel="external">http://ljswiftserver.herokuapp.com/hello</a></p>
-<p>欢呼吧！</p>
-<h2 id="问题">问题</h2><p>没法debug！！！Xcode编译项目会报错，只能通过命令行运行程序。若有大牛知道，忘不吝赐教</p>
-
+<p><a href="http://blog.yourtion.com/install-swift-and-solve-library-not-loaded.html">解决办法</a>，添加环境变量：<br><code>export DYLD_LIBRARY_PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/lib/swift/macosx:$DYLD_LIBRARY_PATH</code></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/03/23/server-with-swift/#more">继续阅读</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
