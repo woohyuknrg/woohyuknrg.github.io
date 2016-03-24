@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://woohyuknrg.github.io/2016/03/23/server-with-swift/index.html">
 <meta property="og:site_name" content="Ray's blog">
 <meta property="og:description" content="swift + vapor">
-<meta property="og:updated_time" content="2016-03-23T13:58:23.000Z">
+<meta property="og:updated_time" content="2016-03-24T13:02:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="swift + vapor写服务器">
 <meta name="twitter:description" content="swift + vapor">
@@ -163,8 +163,8 @@
 <p>此处有坑，不要下载最新的3.16号的安装包，要下载和vapor使用版本一致的包，可打开vapor里的.swift-version文件查看其使用版本，目前使用的是：<br><a href="https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg" target="_blank" rel="external">https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg</a></p>
 <h2 id="添加环境变量">添加环境变量</h2><p>若使用的是Xcode7.3：<code>export TOOLCHAINS=swift</code></p>
 <p>或者使用Xcode7.2：<code>PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin:$PATH</code></p>
-<p>添加后执行：<code>swift —version</code>，确认显示为：<code>Swift version 3.0-dev</code></p>
-<p>再执行：<code>swift build —version</code>，确认显示为：<code>Apple Swift Package Manager</code></p>
+<p>添加后执行：<code>swift --version</code>，确认显示为：<code>Apple Swift version 3.0-dev</code></p>
+<p>再执行：<code>swift build --version</code>，确认显示为：<code>Apple Swift Package Manager 0.1</code></p>
 <p>若出现以下错误（下载DEVELOPMENT-SNAPSHOT-2016-03-16-a的包会出这个问题，我最初下载的3.16的包，遇到这个问题，一并记录在这儿；下载安装3.1的包不会有该问题）：</p>
 <blockquote>
 <p>dyld: Library not loaded: @rpath/libswiftCore.dylib<br>Referenced from: /Library/Developer/Toolchains/swift-DEVELOPMENT-SNAPSHOT-2016-03-16-a.xctoolchain/usr/bin/swift-build<br>Reason: image not found</p>
@@ -176,6 +176,7 @@
 <pre><code><span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/debug
 <span class="variable">$(</span><span class="constant">SRCROOT</span>)/.build/release
 </code></pre><h2 id="toolchain运行Xcode">toolchain运行Xcode</h2><p><code>xcrun launch-with-toolchain /Library/Developer/Toolchains/swift-latest.xctoolchain</code></p>
+<p>或者Xcode7.3可直接选择toolchain为development snapshot运行起来</p>
 <h2 id="修改main-swift代码">修改main.swift代码</h2><p>示例项目的代码编译出错，看了下vapor的使用示例，我改成了如下代码：</p>
 <pre><code><span class="keyword">import</span> Foundation
 <span class="keyword">import</span> Vapor
