@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: vapor | Ray&#39;s blog</title>
+  <title>使用spaceship批量添加设备并更新profile | Ray&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ray's blog">
-<meta property="og:url" content="http://woohyuknrg.github.io/tags/vapor/index.html">
+  <meta name="description" content="spaceship">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用spaceship批量添加设备并更新profile">
+<meta property="og:url" content="http://woohyuknrg.github.io/2016/08/24/spaceship/index.html">
 <meta property="og:site_name" content="Ray's blog">
-<meta property="og:description">
+<meta property="og:description" content="spaceship">
+<meta property="og:updated_time" content="2016-08-24T12:02:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ray's blog">
-<meta name="twitter:description">
+<meta name="twitter:title" content="使用spaceship批量添加设备并更新profile">
+<meta name="twitter:description" content="spaceship">
   
   
     <link rel="icon" href="favicon.png">
@@ -119,41 +120,131 @@
 </aside>
 
       
-      <section id="main">
-    <section class="archives-wrap">
-    <div class="archive-tag-wrap">
-      <span class="archive-tag">#vapor</span>
-    </div>
-    <div class="archives">
+      <section id="main"><article id="post-spaceship" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
     
-    <header class="archive-article-header">
-      
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/03/23/server-with-swift/">swift + vapor写服务器</a>
+    <h1 class="article-title" itemprop="name">
+      使用spaceship批量添加设备并更新profile
     </h1>
   
 
-      
-        
-  <div class="archive-article-date">
+        <div class="article-meta">
+          
+  <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2016/03/23/server-with-swift/">
-      <time datetime="2016-03-23T12:43:38.000Z" itemprop="datePublished">2016 3月 23</time>
+    <a href="/2016/08/24/spaceship/">
+      <time datetime="2016-08-24T06:50:42.000Z" itemprop="datePublished">2016-08-24</time>
     </a>
   </div>
 
 
-      
-    </header>
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/ios/">ios</a>
   </div>
-</article>
+
+        </div>
+      </header>
     
-    </div></section>
-    </section>
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在公司经历过同时需要添加多个设备并更新profile，幸得有<a href="https://github.com/fastlane/fastlane/tree/master/spaceship" target="_blank" rel="external">spaceship</a>相助，写了个脚本UpdateProfile.rb：</p>
+<pre><code><span class="built_in">require</span> <span class="string">"spaceship"</span>
+
+Spaceship.login(<span class="string">'APPLE ID'</span>, <span class="string">'password'</span>)
+
+<span class="comment">#参数传入true表示需要新增设备，例如：ruby UpdateProfile.rb true</span>
+<span class="keyword">if</span> ARGV[<span class="number">0</span>] == <span class="string">"true"</span>
+    <span class="built_in">file</span> = File.<span class="built_in">open</span>(<span class="string">"multiple-device-upload-ios.txt"</span>) <span class="comment">#文本文件里录入的udid和设备名用tab分隔</span>
+    <span class="built_in">file</span>.<span class="keyword">each</span> <span class="built_in">do</span> |<span class="built_in">line</span>|
+        arr = <span class="built_in">line</span>.strip.<span class="built_in">split</span>(<span class="string">"\t"</span>)
+        device = Spaceship.device.<span class="built_in">create</span>!(name: arr[<span class="number">1</span>], udid: arr[<span class="number">0</span>])
+        puts <span class="string">"add device: #{device.name} #{device.udid} #{device.model}"</span>
+    <span class="function"><span class="keyword">end</span>
+
+    <span class="title">devices</span> = <span class="title">Spaceship</span>.<span class="title">device</span>.<span class="title">all</span></span>
+
+    profiles = Array.<span class="built_in">new</span>
+    profiles += Spaceship.provisioning_profile.development.all 
+    profiles += Spaceship.provisioning_profile.ad_hoc.all
+
+    profiles.<span class="keyword">each</span> <span class="built_in">do</span> |p|
+        puts <span class="string">"Updating #{p.name}"</span>
+        p.devices = devices
+        p.update!
+    <span class="function"><span class="keyword">end</span>
+<span class="title">end</span></span>
+
+dic = { <span class="string">"XXXAdHoc"</span> =&gt; <span class="string">"773086ad-6b7b-4e57-85b7-08b577308e91.mobileprovision"</span>, 
+        <span class="string">"XXXDevelop"</span> =&gt; <span class="string">"a7a85aa7-f359-4415-a8ed-3dacc31ea448.mobileprovision"</span> }
+
+downloadProfiles = Array.<span class="built_in">new</span>
+downloadProfiles += Spaceship.provisioning_profile.development.all 
+downloadProfiles += Spaceship.provisioning_profile.ad_hoc.all
+
+downloadProfiles.<span class="keyword">each</span> <span class="built_in">do</span> |p|
+    puts <span class="string">"Downloading #{p.name}"</span>
+    fileName = dic[p.name]
+    File.<span class="built_in">write</span>(<span class="string">"/Users/ray/Library/MobileDevice/Provisioning Profiles/#{fileName}"</span>, p.download)
+<span class="keyword">end</span>
+</code></pre><a id="more"></a>
+<p>脚本说明：</p>
+<ol>
+<li>APPLE ID和password替换为自己的帐号</li>
+<li><p>脚本文件同目录下需要一个multiple-device-upload-ios.txt文件，文件里录入的udid在前，设备名在后，用tab分隔；如：</p>
+<pre><code>udid1    ray<span class="quoted">'s</span> iPhone
+udid2    jun<span class="quoted">'s</span> iPhone
+</code></pre></li>
+<li>dic字典存放的是profile名及其对应的保存到电脑里的mobileprovision名</li>
+<li>最后一句代码File.write记得把<strong>ray</strong>改成自己的Users路径名</li>
+<li>新增设备执行：<code>ruby UpdateProfile.rb true</code></li>
+<li>若只需要更新profile文件则执行：<code>ruby UpdateProfile.rb</code></li>
+</ol>
+<p>收工搞定</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://woohyuknrg.github.io/2016/08/24/spaceship/" data-id="cis8upvfu0009hnoi06p64pdk" class="article-share-link">分享到</a>
+      
+        <a href="http://woohyuknrg.github.io/2016/08/24/spaceship/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spaceship/">spaceship</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/23/server-with-swift/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">swift + vapor写服务器</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://woohyuknrg.github.io/2016/08/24/spaceship/" data-title="使用spaceship批量添加设备并更新profile" data-url="http://woohyuknrg.github.io/2016/08/24/spaceship/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
       
         <aside id="sidebar">
   
