@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://woohyuknrg.github.io/2016/09/17/project-to-swift2-3/index.html">
 <meta property="og:site_name" content="Ray's blog">
 <meta property="og:description" content="迁移项目在Xcode8正常运行">
-<meta property="og:updated_time" content="2016-09-17T14:20:57.000Z">
+<meta property="og:updated_time" content="2016-09-17T14:54:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="项目迁移至swift2.3并适配iOS10">
 <meta name="twitter:description" content="迁移项目在Xcode8正常运行">
@@ -157,35 +157,48 @@
                 
         <p>因为项目里用到的有些第三方库还没有兼容swift3，所以只有先迁移到swift2.3，过程记录如下：<br><a id="more"></a></p>
 <ol>
-<li>先执行<code>pod outdated</code>，看下有哪些三方库版本较低需要升级，需要升级的库去其github主页上看下是否已经支持swift2.3了，支持的话那就指定swift2.3对应的版本号；若只支持swift3的，那还是指定原来较老的版本号。</li>
-<li>接着执行<code>pod update</code>后，我在这里遇到一个错误：The ‘Pods-xxx’ target has frameworks with conflicting names: UMMobClick。解决方案：先把友盟库注释掉，重新执行<code>pod update</code>，这下没问题了；我又尝试重新添加友盟库再update，之前的错误竟没了，靠。</li>
-<li>Xcode8打开项目，弹窗要求convert，这里选择<code>Convert to Swift2.3</code>，新的弹窗要求勾选需要转换的代码库，保持默认勾选即可。接下来静待converting。</li>
-<li>convert完了后运行项目，冒出一些语法错误，看来没有彻底convert。不过相比于swift3的大量语法改变，swift2.3需要改的并不多，根据错误提示一一解决。</li>
-<li>重新运行项目，又有个错误：<code>Module file was created by an older version of the compiler; rebuild &#39;RealmSwift&#39; and try again</code>。我在作迁移时，Realm官网还仍然是老的1.0.2版本（现在已经发布了1.1.0版本包括swift2.3和swift3的framework），于是只有自己<code>git clone https://github.com/realm/realm-cocoa.git</code>，然后执行：<code>REALM_SWIFT_VERSION=2.3 sh build.sh ios-swift</code>，最后报错：<code>xcodebuild: error: Unable to find a destination matching the provided destination specifier: { name:iPhone 6 }</code>。解决方案：修改build.sh的132行为<code>destination=&quot;iPhone 7&quot;</code>，再重新执行上面的编译脚本，成功编译得到Realm.framework和RealmSwift.framework，替换项目里老的framework。</li>
-<li>再次运行项目，Build Success，不过还没完。</li>
+<li><p>先执行<code>pod outdated</code>，看下有哪些三方库版本较低需要升级，需要升级的库去其github主页上看下是否已经支持swift2.3了，支持的话那就指定swift2.3对应的版本号；若只支持swift3的，那还是指定原来较老的版本号。</p>
+</li>
+<li><p>接着执行<code>pod update</code>后，我在这里遇到一个错误：The ‘Pods-xxx’ target has frameworks with conflicting names: UMMobClick。解决方案：先把友盟库注释掉，重新执行<code>pod update</code>，这下没问题了；我又尝试重新添加友盟库再update，之前的错误竟没了，靠。</p>
+</li>
+<li><p>Xcode8打开项目，弹窗要求convert，这里选择<code>Convert to Swift2.3</code>，新的弹窗要求勾选需要转换的代码库，保持默认勾选即可。接下来静待converting。</p>
+</li>
+<li><p>convert完了后运行项目，冒出一些语法错误，看来没有彻底convert。不过相比于swift3的大量语法改变，swift2.3需要改的并不多，根据错误提示一一解决。</p>
+</li>
+<li><p>重新运行项目，又有个错误：<code>Module file was created by an older version of the compiler; rebuild &#39;RealmSwift&#39; and try again</code>。我在作迁移时，Realm官网还仍然是老的1.0.2版本（现在已经发布了1.1.0版本包括swift2.3和swift3的framework），于是只有自己<code>git clone https://github.com/realm/realm-cocoa.git</code>，然后执行：<code>REALM_SWIFT_VERSION=2.3 sh build.sh ios-swift</code>，最后报错：<code>xcodebuild: error: Unable to find a destination matching the provided destination specifier: { name:iPhone 6 }</code>。解决方案：修改build.sh的132行为<code>destination=&quot;iPhone 7&quot;</code>，再重新执行上面的编译脚本，成功编译得到Realm.framework和RealmSwift.framework，替换项目里老的framework。</p>
+</li>
+<li><p>再次运行项目，Build Success，不过还没完。</p>
+</li>
 </ol>
 <hr>
 <h1 id="适配iOS10">适配iOS10</h1><ol>
-<li>Info.plist添加：<em>NSPhotoLibraryUsageDescription</em>和<em>NSCameraUsageDescription</em>，其他权限参看<a href="http://www.jianshu.com/p/f8151d556930" target="_blank" rel="external">http://www.jianshu.com/p/f8151d556930</a></li>
-<li>推送通知：</li>
+<li><p>Info.plist添加：<em>NSPhotoLibraryUsageDescription</em>和<em>NSCameraUsageDescription</em>，其他权限参看<a href="http://www.jianshu.com/p/f8151d556930" target="_blank" rel="external">http://www.jianshu.com/p/f8151d556930</a></p>
+</li>
+<li><p>推送通知：</p>
+</li>
 </ol>
 <ul>
 <li>项目设置的Capabilities里开启Push Notifications，会自动生成xxx.entitlements文件，记得提交审核打包时把development改为production</li>
 <li>AppIcon添加Icon-20的2x，3x图标</li>
 <li>我们用的是百度推送，也已经有了新版，更新至1.4.7</li>
-<li>AppDelegate的didFinishLaunchingWithOptions函数添加：<br>  if #available(iOS 10.0, *) {<br>  UNUserNotificationCenter.currentNotificationCenter().delegate = PushNotificationService.instance<br>  }</li>
-<li>注册推送：<br>  func registerNotification() {<br>  if #available(iOS 10.0, *) {<br>  UNUserNotificationCenter.currentNotificationCenter()<br>  .requestAuthorizationWithOptions([.Alert, .Badge, .Sound]) { granted, error in<br>  if granted {<br>  UIApplication.sharedApplication().registerForRemoteNotifications()<br>  } else if let err = error {<br>  log.error(“registerForRemoteNotifications err=(err)”)<br>  }<br>  }<br>  } else {<br>  let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound],<pre><code><span class="attribute">categories</span>: <span class="string">nil)</span>
-</code></pre>  UIApplication.sharedApplication().registerUserNotificationSettings(settings)<br>  }<br>  }</li>
-<li><p>实现UNUserNotificationCenterDelegate代理函数<br>  @available(iOS 10.0, *)<br>  extension PushNotificationService: UNUserNotificationCenterDelegate {</p>
-<p>  //点击推送通知都会调用该函数<br>  func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -&gt; Void) {<br>  handleNotification(response.notification.request.content.userInfo,</p>
-<pre><code>applicationState: UIApplication.<span class="function"><span class="title">sharedApplication</span><span class="params">()</span></span>.applicationState)
-</code></pre><p>  completionHandler()<br>  }<br>  }</p>
-</li>
+<li>AppDelegate的didFinishLaunchingWithOptions函数添加：</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if #available(iOS 10.0, *) &#123;&#10;&#9;UNUserNotificationCenter.currentNotificationCenter().delegate = PushNotificationService.instance&#10;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>注册推送：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func registerNotification() &#123;&#10;    if #available(iOS 10.0, *) &#123;&#10;        UNUserNotificationCenter.currentNotificationCenter()&#10;            .requestAuthorizationWithOptions([.Alert, .Badge, .Sound]) &#123; granted, error in&#10;                if granted &#123;&#10;                    UIApplication.sharedApplication().registerForRemoteNotifications()&#10;                &#125; else if let err = error &#123;&#10;                    log.error(&#34;registerForRemoteNotifications err=\(err)&#34;)&#10;                &#125;&#10;        &#125;&#10;    &#125; else &#123;&#10;        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound],&#10;                                                  categories: nil)&#10;        UIApplication.sharedApplication().registerUserNotificationSettings(settings)&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>实现UNUserNotificationCenterDelegate代理函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@available(iOS 10.0, *)&#10;extension PushNotificationService: UNUserNotificationCenterDelegate &#123;&#10;&#10;    //&#28857;&#20987;&#25512;&#36865;&#36890;&#30693;&#37117;&#20250;&#35843;&#29992;&#35813;&#20989;&#25968;&#10;    func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -&#62; Void) &#123;&#10;        handleNotification(response.notification.request.content.userInfo,&#10;                           applicationState: UIApplication.sharedApplication().applicationState)&#10;        completionHandler()&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <ol>
-<li>字体变宽导致文字显示不全，我们项目里有这种情况的是因为设置了label的宽度约束。除了删除宽度约束再修改其他约束条件来使UI与以前一样外，另外更简便的方法是可以设置UILabel的<strong>minimumScaleFactor</strong>，IB里同样可以设置，保持0.5就好</li>
-<li>我们项目里有把UITableViewCell和UITableViewHeaderFooterView用在除TableView的其他地方。之前代码设置高度约束是作用于cell上，在iOS10设备上运行会出现约束冲突，显示也有问题。把高度约束作用于cell.contentView上就OK了，代码如下（autolayout三方库用的是<a href="https://github.com/nakiostudio/EasyPeasy" target="_blank" rel="external">EasyPeasy</a>，个人认为代码书写上比snapkit要简洁些）：<br> if #available(iOS 10.0, *) {<br> cell.contentView &lt;- Height(110)<br> } else {<br> cell &lt;- Height(110)<br> }</li>
+<li><p>字体变宽导致文字显示不全，我们项目里有这种情况的是因为设置了label的宽度约束。除了删除宽度约束再修改其他约束条件来使UI与以前一样外，另外更简便的方法是可以设置UILabel的<strong>minimumScaleFactor</strong>，IB里同样可以设置，保持0.5就好</p>
+</li>
+<li><p>我们项目里有把UITableViewCell和UITableViewHeaderFooterView用在除TableView的其他地方。之前代码设置高度约束是作用于cell上，在iOS10设备上运行会出现约束冲突，显示也有问题。把高度约束作用于cell.contentView上就OK了，代码如下（autolayout三方库用的是<a href="https://github.com/nakiostudio/EasyPeasy" target="_blank" rel="external">EasyPeasy</a>，个人认为代码书写上比snapkit要简洁些）：</p>
+</li>
 </ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if #available(iOS 10.0, *) &#123;&#10;    cell.contentView &#60;- Height(110)&#10;&#125; else &#123;&#10;    cell &#60;- Height(110)&#10;&#125;</span><br></pre></td></tr></table></figure>
 <hr>
 <p>2个项目利用中秋假期的两天完成迁移和代码适配，问题解决，总的来说比想象中容易些。迁移至swift3有困难的朋友，不妨先迁到swift2.3，至少可以让项目能在Xcode8上跑起来。</p>
 <p>参考网址：<br><a href="http://stackoverflow.com/questions/38888454/how-to-build-realm-using-swift-2-3" target="_blank" rel="external">http://stackoverflow.com/questions/38888454/how-to-build-realm-using-swift-2-3</a><br><a href="https://onevcat.com/2016/08/notification/" target="_blank" rel="external">https://onevcat.com/2016/08/notification/</a><br><a href="http://www.jianshu.com/p/f8151d556930" target="_blank" rel="external">http://www.jianshu.com/p/f8151d556930</a><br><a href="http://www.jianshu.com/p/9756992a35ca" target="_blank" rel="external">http://www.jianshu.com/p/9756992a35ca</a></p>
